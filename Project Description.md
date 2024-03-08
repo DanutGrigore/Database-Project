@@ -14,3 +14,4 @@ My database contains 8 tables:
 
 I created a separate table with information about players, because they have other characteristics compared to managers and coaches. 
 Unfortunately, the table names as well as their attributes are in Romanian, but you can still translate them and I'll attach the conceptual scheme and the code on other worksheets, so you can understand the links between tables.
+After creating and populating the tables, I also made a series of queries.
