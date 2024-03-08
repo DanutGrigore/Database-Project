@@ -1,0 +1,163 @@
+--Afisati denumirea si valoarea totala a fiecarei echipe in ordine descrescatoare.
+SELECT e.denumire_echipa, SUM(valoare_jucator) as valoare_echipa 
+FROM echipe e, componenti c, info_jucatori ij
+WHERE e.id_echipa=c.id_echipa AND ij.id_jucator=c.id_component
+GROUP BY e.denumire_echipa
+ORDER BY Valoare_echipa DESC;
+
+--Completati coloana VALOARE_ECHIPA din tabela ECHIPE cu valoarea fiecarei echipe in parte.
+UPDATE Echipe
+SET valoare_echipa = (
+ SELECT SUM(ij.valoare_jucator)
+ FROM info_jucatori ij
+ WHERE ij.id_jucator IN 
+ (SELECT c.id_component from componenti c
+ WHERE c.id_echipa=Echipe.id_echipa)
+ ); 
+--16 rows updated.
+
+--Completati coloana NR_JUCATORI din tabela ECHIPE
+UPDATE ECHIPE
+SET nr_jucatori = 
+ (SELECT COUNT(c.id_echipa)
+ FROM componenti c, functii_comp fc
+ WHERE fc.id_functie = c.id_functie AND c.id_functie=3 AND c.id_echipa = 
+Echipe.id_echipa);
+--16 rows updated.
+ 
+--Afisati salariul mediu de la fiecare echipa, incluzand si antrenorii si jucatorii
+SELECT e.denumire_echipa, ROUND(AVG(salariu),2) as SALARIU_MEDIU 
+FROM echipe e, componenti c
+WHERE e.id_echipa=c.id_echipa
+GROUP BY e.denumire_echipa;
+
+--Calculati suma salariilor pentru fiecare echipa in parte, si denumiti-o sugestiv 
+BUGET_LUNAR_SALARII si creati o tabela virtuala cu aceasta
+CREATE VIEW BUGETE_SALARIALE AS
+SELECT e.id_echipa, e.denumire_echipa, SUM(salariu) as
+BUGET_LUNAR_SALARII 
+FROM echipe e, componenti c
+WHERE e.id_echipa=c.id_echipa
+GROUP BY e.id_echipa, e.denumire_echipa;
+
+--Creati clasamentul golgheterilor ligii
+SELECT c.nume||' '||c.prenume as nume_jucator, denumire_echipa, nr_goluri 
+FROM componenti c, info_jucatori ij, echipe e
+WHERE id_functie=3 and c.id_component = ij.id_jucator and 
+c.id_echipa=e.id_echipa
+ORDER BY nr_goluri DESC;
+
+-- Creati o tabela virtuala pe baza celeilalte tabele virtuale, in care adaugati 
+remuneratie_actionar (adica ce ii revine actionarului), astfel:
+--10% din bugetul_salarial, daca acesta este sub 100.000
+--15%, daca acesta este intre 100.000-200.000
+--20%, daca acesta este peste 200.000
+CREATE VIEW Salarii_actionari as
+SELECT id_echipa, denumire_echipa, buget_lunar_salarii,
+CASE
+ WHEN buget_lunar_salarii < 100000 THEN 0.1*buget_lunar_salarii
+ WHEN buget_lunar_salarii BETWEEN 100000 AND 200000 THEN 
+0.15*buget_lunar_salarii
+ WHEN buget_lunar_salarii > 200000 THEN 0.2*buget_lunar_salarii
+END as remuneratie_actionar
+FROM bugete_salariale;
+SELECT * from salarii_actionari;
+
+--Completati coloana cu salariile actionarilor din tabela componenti pe baza 
+tabelei virtuale recent create
+UPDATE componenti
+SET salariu = (SELECT remuneratie_actionar from salarii_actionari s WHERE 
+s.id_echipa = componenti.id_echipa AND componenti.id_functie=1) 
+WHERE id_functie=1;
+
+--Aflati care ar fi valoarea jucatorilor in urmatoarea perioada de actualizari a 
+cotelor de piata daca statisticile ar ramane asa(exceptand portarii) astfel:
+--Daca jucatorul are sub 3 contributii, atunci valoarea ii scade cu 10%
+--Daca jucatorul are intre 3 si 10 contributii, atunci aceasta stagneaza
+--Daca jucatorul are peste 10 contributii, valoarea ii creste cu 10%.
+SELECT id_jucator, nume||' '||prenume as nume_jucator, denumire_pozitie, nr_goluri+nr_assisturi as total_contributii, valoare_jucator,
+CASE
+ WHEN (nr_goluri + nr_assisturi) < 3 THEN valoare_jucator - 0.1*valoare_jucator
+ WHEN (nr_goluri + nr_assisturi) BETWEEN 3 AND 10 THEN valoare_jucator
+ WHEN (nr_goluri + nr_assisturi) > 10 THEN valoare_jucator + 0.1*valoare_jucator
+ ELSE valoare_jucator
+END as valoare_actualizata
+FROM info_jucatori ij, componenti c, pozitii_teren p
+WHERE c.id_component=ij.id_jucator and ij.id_pozitie!=1 and ij.id_pozitie = p.id_pozitie;
+
+--Afisati toti jucatorii, impreuna cu impresarul lor, indiferent daca acestia au sau nu
+SELECT ij.id_jucator, c.nume||' '||c.prenume as nume_jucator, i.id_impresar, i.nume||' '||i.prenume as nume_impresar
+FROM info_jucatori ij, componenti c , impresari i
+WHERE c.id_component=ij.id_jucator AND i.id_impresar(+) = ij.id_impresar;
+
+
+--Afisati impresarii care nu au niciun jucator folosind operatorul MINUS
+SELECT id_impresar from impresari
+MINUS
+SELECT id_impresar from info_jucatori;
+
+--Sa se afiseze componentii(membrii staffurilor) careau venit la club in anul 
+2021 (nume si functie si echipa la care activeaza)
+SELECT c.nume, c.prenume, fc.denumire_functie, denumire_echipa from 
+componenti c, functii_comp fc, echipe e
+WHERE fc.id_functie=c.id_functie AND c.id_echipa=e.id_echipa AND 
+EXTRACT(YEAR from data_sosire_la_echipa)=2021;
+
+--Sa se afiseze jucatorii care au salariul intre 5000 si 25000, fara cei care au salariul intre 12500 si 20000
+--De data asta ma folosesc de conventia ca jucatorii au id cu 3 la inceput
+--VARIANTA CU UNION
+SELECT * FROM componenti
+WHERE salariu BETWEEN 5000 AND 12500 AND id_component>2999
+UNION 
+SELECT * FROM componenti
+WHERE salariu BETWEEN 20000 AND 25000 AND id_component>2999;
+
+--Sa se calculeze ce varsta avea fiecare membru al staffului atunci cand a ajuns 
+la club
+SELECT c.id_component, c.nume||' '||c.prenume as nume_membru, e.denumire_echipa, ROUND((c.data_sosire_la_echipa - c.data_nasterii)/365,0) as varsta_cand_a_sosit
+FROM componenti c, echipe e
+WHERE e.id_echipa = c.id_echipa;
+
+--Sa se afiseze impresarii care au mai mult de 10 jucatori.
+SELECT i.nume||' '||i.prenume as Nume_impresar, COUNT(ij.id_impresar) as Nr_jucatori_impresariati 
+FROM impresari i, info_jucatori ij
+WHERE i.id_impresar=ij.id_impresar
+GROUP BY i.nume,i.prenume
+HAVING COUNT(ij.id_impresar)>=10
+ORDER BY Nr_jucatori_impresariati DESC;
+
+--Sa se afiseze numarul transferului, numele jucatorului, suma platita pe el si echipa la care a sosit pentru transferurile care s-au efectuat din strainatate si care au avut un impresar implicat
+SELECT t.id_transfer, c.nume, c.prenume, e.denumire_echipa as Echipa_Noua, 
+t.suma_transfer
+FROM transferuri t, componenti c, echipe e
+WHERE c.id_component=t.id_jucator AND e.id_echipa=t.id_echipa_noua AND 
+t.id_echipa_veche IS NULL and t.id_impresar IS NOT NULL;
+
+--Sa se afiseze jucatorii care au numarul de pe tricou mai mare decat 7 si au salariul cuprins intre 4000 si 10000, utilizandu-se operatorul INTERSECT
+--Jucatorii care au nr de pe tricou mai mare decat 7
+SELECT ij.id_jucator,c.nume||' '||c.prenume as nume_jucator, ij.nr_tricou, c.salariu
+FROM componenti c, info_jucatori ij
+WHERE ij.id_jucator=c.id_component and ij.nr_tricou>7
+INTERSECT
+--Jucatorii care au salariul cuprins intre 4000 si 10000
+SELECT ij.id_jucator,c.nume||' '||c.prenume as nume_jucator, ij.nr_tricou, c.salariu
+FROM componenti c, info_jucatori ij
+WHERE ij.id_jucator=c.id_component and c.salariu BETWEEN 4000 AND 10000
+
+--Sa se afiseze echipele, anul in care s-au infiintat si orasele din care provin pentru cele ce s-au infiintat mai recent de 25 de ani si nu sunt din Bucuresti sau Craiova.
+SELECT * FROM orase;
+SELECT e.id_echipa, e.denumire_echipa, o.denumire_oras, EXTRACT(YEAR from data_infiintare) as An_Infiintare
+FROM echipe e, orase o
+WHERE e.id_oras=o.id_oras and (ROUND(SYSDATE -data_infiintare,0)/365)<25 and o.denumire_oras NOT IN ('Bucuresti', 'Craiova');
+
+--Sa se afiseze toti jucatorii ale caror salarii incep cu cifra 5 si joaca in compartimentul din atac.
+SELECT nume||' '||prenume as nume_jucator, c.salariu, p.denumire_pozitie
+FROM info_jucatori ij, componenti c, pozitii_teren p
+WHERE c.id_component=ij.id_jucator AND ij.id_pozitie = p.id_pozitie AND to_char(c.salariu) LIKE '5%' AND UPPER(SUBSTR(p.denumire_pozitie,1,4))='ATAC';
+
+--Sa se afiseze numele, functia, echipa si nivelul ierarhic pentru toti membrii echipelor din Bucuresti
+SELECT c.nume, c.prenume, fc.denumire_functie, e.denumire_echipa, LEVEL, SYS_CONNECT_BY_PATH(c.nume||' '||c.prenume ,' /') as Ierarhie
+FROM componenti c, functii_comp fc, echipe e, orase o
+WHERE c.id_functie=fc.id_functie AND e.id_echipa=c.id_echipa AND o.id_oras=e.id_oras and o.denumire_oras='Bucuresti' 
+CONNECT BY c.id_manager= PRIOR c.id_component
+START WITH c.id_manager IS NULL;
