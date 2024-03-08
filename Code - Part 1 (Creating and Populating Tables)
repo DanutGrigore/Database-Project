@@ -1,0 +1,1655 @@
+CREATE TABLE Orase
+(
+id_oras number(3) CONSTRAINT pk_oras PRIMARY KEY,
+denumire_oras varchar2(20) 
+);
+CREATE TABLE Echipe
+(
+id_echipa number(3) CONSTRAINT pk_ech PRIMARY KEY,
+denumire_echipa varchar2(25),
+id_oras number(3) CONSTRAINT fk_oras REFERENCES Orase(id_oras),
+data_infiintare date,
+nr_titluri number(2),
+nr_cupe number(2),
+valoare_echipa number(10),
+nr_jucatori number(2)
+);
+CREATE TABLE Functii_Comp
+(
+id_functie number(3) CONSTRAINT pk_fc PRIMARY KEY,
+denumire_functie varchar2(15)
+);
+CREATE TABLE Componenti
+(
+id_component number(4) CONSTRAINT pk_comp PRIMARY KEY,
+nume varchar2(15),
+prenume varchar2(20),
+id_functie number(3) constraint fk_fc REFERENCES Functii_Comp(id_functie),
+id_manager number(4),
+id_echipa number(3) CONSTRAINT fk_ech REFERENCES Echipe(id_echipa),
+salariu number(6),
+data_nasterii date,
+data_sosire_la_echipa date
+);
+CREATE TABLE Impresari
+(
+id_impresar number(2) CONSTRAINT pk_impr PRIMARY KEY,
+nume varchar2(15),
+prenume varchar2(20),
+data_nasterii date,
+telefon char(10) CONSTRAINT ck_impr CHECK (telefon LIKE '09%')
+);
+
+ALTER TABLE Impresari
+ADD CONSTRAINT uq_impr UNIQUE (telefon);
+
+CREATE TABLE pozitii_teren
+(
+id_pozitie number(2) CONSTRAINT pk_poz PRIMARY KEY,
+denumire_pozitie varchar2(15)
+);
+CREATE TABLE Info_Jucatori
+(
+id_jucator number(4) CONSTRAINT fk_info REFERENCES 
+Componenti(id_component),
+nr_goluri number(2),
+nr_assituri number(2),
+id_pozitie number(2) CONSTRAINT fk_poz REFERENCES 
+pozitii_teren(id_pozitie),
+nr_tricou number(2),
+valoare_jucator number(10),
+id_impresar number(2) CONSTRAINT fk_impr REFERENCES 
+impresari(id_impresar)
+);
+CREATE TABLE Transferuri
+(
+id_transfer number(2) CONSTRAINT pk_transf PRIMARY KEY,
+id_jucator number(4) CONSTRAINT fk_comp REFERENCES 
+Componenti(id_component),
+id_echipa_veche number(2) CONSTRAINT fk_ech_veche REFERENCES 
+Echipe(id_echipa),
+id_echipa_noua number(2) CONSTRAINT fk_ech_noua REFERENCES 
+Echipe(id_echipa),
+suma_transfer number(10),
+id_impresar number(2) CONSTRAINT fk_impr2 REFERENCES 
+Impresari(id_impresar)
+);
+
+
+CREATE SEQUENCE seq_orase
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 20
+CREATE SEQUENCE seq_ech
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 20
+CREATE SEQUENCE seq_poz
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 20
+
+
+--ORASE--
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Bucuresti');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Ploiesti');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Pitesti');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Botosani');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Sf. Gheorghe');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Craiova');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Galati');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Cluj');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Constanta');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Sibiu');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Voluntari');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Arad');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Iasi');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Campulung');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Oradea');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Suceava');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Tg. Mures');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Giurgiu');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Satu Mare');
+INSERT INTO Orase(id_oras, denumire_oras)
+VALUES (seq_orase.NEXTVAL, 'Timisoara');
+
+
+--ECHIPE--
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'FCSB', 1, to_date('07-06-1947', 'DD-MMYYYY'),26,22);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Rapid', 1, to_date('25-06-1923', 'DD-MMYYYY'),3,13);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Dinamo', 1, to_date('14-07-1948', 'DD-MMYYYY'),18,13);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'CFR', 8, to_date('10-11-1907', 'DD-MMYYYY'),8,4);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Sepsi OSK', 5, to_date('15-06-2011', 'DD-MMYYYY'),0,2);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Petrolul', 2, to_date('31-12-1924', 'DD-MMYYYY'),4,3);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Hermannstadt', 10, to_date('29-07-2015', 'DDMM-YYYY'),0,0);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Otelul', 7, to_date('19-09-1964', 'DD-MMYYYY'),1,0);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'FC Universitatea 1948', 6, to_date('05-09-1948', 
+'DD-MM-YYYY'),1,2);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'CS U Craiova', 6, to_date('20-09-2013', 'DD-MMYYYY'),3,6);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'FC Botosani', 4, to_date('04-06-2001', 'DD-MMYYYY'),0,0);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'FC Voluntari', 11, to_date('21-07-2010', 'DDMM-YYYY'),0,2);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Politehnica Iasi', 1, to_date('16-08-2010', 'DDMM-YYYY'),0,0);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'UTA Arad', 12, to_date('18-04-1945', 'DD-MMYYYY'),6,2);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare,
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Universitatea Cluj', 8, to_date('16-08-2010', 'DDMM-YYYY'),0,1);
+INSERT INTO Echipe(id_echipa, denumire_echipa, id_oras, data_infiintare, 
+nr_titluri, nr_cupe)
+VALUES(seq_ech.NEXTVAL, 'Farul', 9, to_date('25-06-2009', 'DD-MMYYYY'),2,1);
+
+SELECT * FROM echipe;
+Update echipe
+SET data_infiintare = to_date('23-11-1919','DD-MM-YYYY')
+WHERE id_echipa=15;
+Update echipe
+SET denumire_echipa = 'CS Universitatea Craiova'
+WHERE id_echipa=10;
+
+--TABELA DE POZITII--
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Portar');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Fundas stanga');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Fundas dreapta');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Fundas central');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Mijlocas def.');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Mijlocas cent.');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Mijlocas of.');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Mijl. dreapta');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Mijl. stanga');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Atacant central');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Atacant dreapta');
+INSERT INTO pozitii_teren(id_pozitie, denumire_pozitie)
+VALUES (seq_poz.NEXTVAL, 'Atacant stanga');
+
+--FUNCTII_COMP--
+INSERT INTO functii_comp(id_functie, denumire_functie)
+VALUES (1, 'Actionar');
+INSERT INTO functii_comp(id_functie, denumire_functie)
+VALUES (2, 'Antrenor');
+INSERT INTO functii_comp(id_functie, denumire_functie)
+VALUES (3, 'Jucator');
+
+--COMPONENTI--
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1000, 'Becali', 'Gheorghe', 1, null, 1, null, to_date('25-06-1958', 'DDMM-YYYY'), to_date('04-05-2003', 'DD-MM-YYYY')); 
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1001, 'Varga', 'Ion', 1, null, 4, null, to_date('15-10-1970', 'DD-MMYYYY'), to_date('24-07-2012', 'DD-MM-YYYY')); 
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1002, 'Pandele', 'Ion', 1, null, 12, null, to_date('13-06-1975', 'DD-MMYYYY'), to_date('21-07-2010', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1003, 'Parvu', 'Vlad', 1, null, 3, null, to_date('20-12-1981', 'DD-MMYYYY'), to_date('04-08-2021', 'DD-MM-YYYY')); 
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1004, 'Sucu', 'Dan', 1, null, 2, null, to_date('12-08-1972', 'DD-MMYYYY'), to_date('29-01-2022', 'DD-MM-YYYY')); 
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1005, 'Dioszegi', 'Laszlo', 1, null, 5, null, to_date('29-04-1968', 'DDMM-YYYY'), to_date('21-06-2014', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1006, 'Mititelu', 'Adrian', 1, null, 9, null, to_date('18-06-1960', 'DDMM-YYYY'), to_date('04-12-2016', 'DD-MM-YYYY')); 
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1007, 'Rotaru', 'Mihai', 1, null, 10, null, to_date('13-03-1973', 'DD-MMYYYY'), to_date('15-11-2013', 'DD-MM-YYYY')); 
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1008, 'Popescu', 'Cristian', 1, null, 6, null, to_date('09-10-1982', 'DDMM-YYYY'), to_date('14-05-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1009, 'Lovin', 'Florin', 1, null, 7, null, to_date('18-03-1979', 'DD-MMYYYY'), to_date('12-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1010, 'Stan', 'Razvan', 1, null, 8, null, to_date('08-07-1985', 'DD-MMYYYY'), to_date('31-07-2016', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1011, 'Butoi', 'Adrian', 1, null, 13, null, to_date('08-03-1975', 'DD-MMYYYY'), to_date('11-07-2014', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1012, 'Iftime', 'Valeriu', 1, null, 11, null, to_date('02-01-1965', 'DD-MMYYYY'), to_date('31-07-2009', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1013, 'Hagi', 'Gheorghe', 1, null, 16, null, to_date('05-02-1965', 'DDMM-YYYY'), to_date('25-06-2009', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1014, 'Petre', 'Octavian', 1, null, 14, null, to_date('05-04-1977', 'DDMM-YYYY'), to_date('25-06-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(1015, 'Marisca', 'Bogdan', 1, null, 15, null, to_date('08-01-1995', 'DDMM-YYYY'), to_date('24-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2000, 'Bergodi', 'Cristiano', 2, 1004, 2, 10000, to_date('13-08-1968', 
+'DD-MM-YYYY'), to_date('05-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2001, 'Charalambous', 'Elias', 2, 1000, 1, 13500, to_date('29-04-1975', 
+'DD-MM-YYYY'), to_date('14-10-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2002, 'Mandorlini', 'Andrea', 2, 1001, 4, 9500, to_date('21-03-1954', 
+'DD-MM-YYYY'), to_date('30-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2003, 'Rednic', 'Mircea', 2, 1014, 14, 3500, to_date('19-10-1955', 'DDMM-YYYY'), to_date('20-12-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2004, 'Vasilica', 'Dan', 2, 1002, 12, 1500, to_date('12-07-1949', 'DDMM-YYYY'), to_date('14-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2005, 'Ciobotariu', 'Liviu', 2, 1005, 5, 6500, to_date('25-11-1971', 'DDMM-YYYY'), to_date('03-04-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2006, 'Constantino', 'Giovani', 2, 1006, 9, 5800, to_date('12-05-1980', 
+'DD-MM-YYYY'), to_date('15-10-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2007, 'Petev', 'Ivaylo', 2, 1007, 10, 7350, to_date('13-11-1972', 'DDMM-YYYY'), to_date('02-11-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2008, 'Parvu', 'Florin', 2, 1008, 6, 4700, to_date('31-12-1978', 'DD-MMYYYY'), to_date('01-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2009, 'Maldarasanu', 'Marius', 2, 1009, 1, 13500, to_date('24-10-1971', 
+'DD-MM-YYYY'), to_date('15-08-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2010, 'Munteanu', 'Dorinel', 2, 1010, 8, 2500, to_date('13-08-1969', 'DDMM-YYYY'), to_date('21-08-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2011, 'Grozavu', 'Leontin', 2, 1011, 13, 1450, to_date('18-08-1967', 'DDMM-YYYY'), to_date('30-03-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2012, 'Croitoru', 'Marius', 2, 1012, 11, 2600, to_date('02-10-1981', 'DDMM-YYYY'), to_date('14-07-2018', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2013, 'Vintila', 'Catalin', 2, 1013, 16, 6500, to_date('05-12-1975', 'DDMM-YYYY'), to_date('21-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2014, 'Burca', 'Ovidiu', 2, 1003, 3, 3200, to_date('08-10-1979', 'DDMM-YYYY'), to_date('26-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(2015, 'Sabau', 'Ioan-Ovidiu', 2, 1015, 15, 3900, to_date('14-08-1968', 
+'DD-MM-YYYY'), to_date('21-09-2023', 'DD-MM-YYYY'));
+UPDATE componenti
+SET id_echipa=7
+WHERE id_component=2009; 
+UPDATE componenti
+SET salariu=5700
+WHERE id_component=2009;
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3000, 'Tarnovanu', 'Stefan', 3, 2001, 1, 10500, to_date('09-05-2000', 
+'DD-MM-YYYY'), to_date('30-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3001, 'Vlad', 'Andrei', 3, 2001, 1, 7000, to_date('15-04-1999', 'DD-MMYYYY'), to_date('15-06-2018', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie,
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3002, 'Ngezana', 'Siyabonga', 3, 2001, 1, 8500, to_date('15-07-1997', 
+'DD-MM-YYYY'), to_date('08-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3003, 'Dawa', 'Joyskim', 3, 2001, 1, 12000, to_date('09-04-1996', 'DDMM-YYYY'), to_date('15-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3004, 'Chiriches', 'Vlad', 3, 2001, 1, 35000, to_date('14-11-1989', 'DDMM-YYYY'), to_date('30-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3005, 'Radunovic', 'Risto', 3, 2001, 1, 14500, to_date('04-05-1992', 'DDMM-YYYY'), to_date('13-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3006, 'Pantea', 'Alexandru', 3, 2001, 1, 9550, to_date('11-09-2003', 'DDMM-YYYY'), to_date('15-12-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3007, 'Sut', 'Adrian', 3, 2001, 1, 10500, to_date('30-04-1999', 'DD-MMYYYY'), to_date('15-12-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3008, 'Olaru', 'Darius', 3, 2001, 1, 25000, to_date('03-03-1998', 'DDMM-YYYY'), to_date('28-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3009, 'Djokovic', 'Damjan', 3, 2001, 1, 20000, to_date('18-04-1990', 
+'DD-MM-YYYY'), to_date('25-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3010, 'Coman', 'Florinel', 3, 2001, 1, 10500, to_date('10-04-1998', 'DDMM-YYYY'), to_date('30-06-2017', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3011, 'Popescu', 'Octavian', 3, 2001, 1, 17500, to_date('27-12-2002', 
+'DD-MM-YYYY'), to_date('27-12-2020', 'DD-MM-YYYY'));
+
+UPDATE componenti
+SET salariu=30000
+WHERE nume='Coman';
+
+
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3012, 'Baluta', 'Alexandru', 3, 2001, 1, 15500, to_date('13-09-1993', 
+'DD-MM-YYYY'), to_date('30-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3013, 'Compagno', 'Andrea', 3, 2001, 1, 24500, to_date('22-04-1996', 
+'DD-MM-YYYY'), to_date('15-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3014, 'Rotariu', 'Dorin', 3, 2001, 1, 13000, to_date('29-07-1995', 'DDMM-YYYY'), to_date('05-08-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3015, 'Moldovan', 'Horatiu', 3, 2000, 2, 8000, to_date('20-01-1998', 'DDMM-YYYY'), to_date('01-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3016, 'Draghia', 'Virgil', 3, 2000, 2, 4200, to_date('31-07-1990', 'DDMM-YYYY'), to_date('13-01-2018', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3017, 'Iacob', 'Paul', 3, 2000, 2, 7000, to_date('20-07-1996', 'DD-MMYYYY'), to_date('31-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3018, 'Sapunaru', 'Cristian', 3, 2000, 2, 19000, to_date('05-04-1984', 
+'DD-MM-YYYY'), to_date('04-06-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3019, 'Cristea', 'Iulian', 3, 2000, 2, 8000, to_date('17-07-1994', 'DDMM-YYYY'), to_date('30-05-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3020, 'Onea', 'Razvan', 3, 2000, 2, 10000, to_date('20-05-1998', 'DDMM-YYYY'), to_date('31-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3021, 'Ionita', 'Alexandru', 3, 2000, 2, 13500, to_date('20-12-1993', 'DDMM-YYYY'), to_date('14-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3022, 'Albu', 'Alexandru', 3, 2000, 2, 11000, to_date('17-08-1993', 'DDMM-YYYY'), to_date('19-12-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3023, 'Cirjan', 'Catalin', 3, 2000, 2, 20000, to_date('01-12-2002', 'DDMM-YYYY'), to_date('24-08-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie,
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3024, 'Valle', 'Borja', 3, 2000, 2, 17500, to_date('09-07-1992', 'DD-MMYYYY'), to_date('12-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3025, 'Petrila', 'Claudiu', 3, 2000, 2, 14000, to_date('07-11-2000', 'DDMM-YYYY'), to_date('14-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3026, 'Funsho', 'Bamgboye', 3, 2000, 2, 11300, to_date('09-01-1999', 
+'DD-MM-YYYY'), to_date('21-01-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3027, 'Rrahmani', 'Albion', 3, 2000, 2, 16450, to_date('31-07-2000', 
+'DD-MM-YYYY'), to_date('13-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3028, 'Panoiu', 'Stefan', 3, 2000, 2, 3000, to_date('23-09-2002', 'DDMM-YYYY'), to_date('02-01-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3029, 'Soni', 'Kevin', 3, 2000, 2, 7000, to_date('18-04-1998', 'DD-MMYYYY'), to_date('26-11-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3030, 'Dujmovic', 'Filip', 3, 2014, 3, 3000, to_date('13-06-1995', 'DDMM-YYYY'), to_date('26-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3031, 'Golubovic', 'Bojan', 3, 2014, 3, 4000, to_date('10-07-1997', 'DDMM-YYYY'), to_date('30-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3032, 'Bejan', 'Florin', 3, 2014, 3, 3500, to_date('04-02-1993', 'DD-MMYYYY'), to_date('01-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3033, 'Amzar', 'Costin', 3, 2014, 3, 2000, to_date('12-10-1999', 'DDMM-YYYY'), to_date('30-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3034, 'Bena', 'Quentin', 3, 2014, 3, 4000, to_date('10-12-1996', 'DDMM-YYYY'), to_date('15-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3035, 'De Moura', 'Gabriel', 3, 2014, 3, 5000, to_date('25-07-1994', 'DDMM-YYYY'), to_date('01-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3036, 'Giafer', 'Denis', 3, 2014, 3, 1500, to_date('13-09-2001', 'DD-MMYYYY'), to_date('18-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3037, 'Larrucea', 'Gorka', 3, 2014, 3, 4000, to_date('12-05-1998', 'DDMM-YYYY'), to_date('30-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3039, 'Rosu', 'Nelut', 3, 2014, 3, 2500, to_date('28-03-1991', 'DD-MMYYYY'), to_date('02-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3041, 'Gregorio', 'Gonzalo', 3, 2014, 3, 6000, to_date('24-08-1995', 'DDMM-YYYY'), to_date('31-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3042, 'Ghezali', 'Lamine', 3, 2014, 3, 7500, to_date('29-10-1999', 'DDMM-YYYY'), to_date('15-01-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3043, 'Sava', 'Razvan', 3, 2002, 4, 6500, to_date('21-06-2002', 'DD-MMYYYY'), to_date('30-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3044, 'Balgradean', 'Cristian', 3, 2002, 4, 4500, to_date('05-08-1988', 
+'DD-MM-YYYY'), to_date('14-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3045, 'Kresic', 'Antun', 3, 2002, 4, 12500, to_date('13-12-1997', 'DDMM-YYYY'), to_date('15-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3046, 'Ajeti', 'Arlind', 3, 2002, 4, 10000, to_date('25-09-1993', 'DDMM-YYYY'), to_date('25-01-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3047, 'Camora', 'Mario', 3, 2002, 4, 23500, to_date('23-04-1988', 'DDMM-YYYY'), to_date('17-07-2009', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3048, 'Manea', 'Cristian', 3, 2002, 4, 18300, to_date('12-12-1997', 'DDMM-YYYY'), to_date('01-02-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3049, 'Tachtsidis', 'Panagiotis', 3, 2002, 4, 15000, to_date('24-05-1992', 
+'DD-MM-YYYY'), to_date('31-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3050, 'Cvek', 'Lovro', 3, 2002, 4, 10500, to_date('12-04-1995', 'DD-MMYYYY'), to_date('30-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3051, 'Fica', 'Alin', 3, 2002, 4, 6500, to_date('14-02-2001', 'DD-MMYYYY'), to_date('30-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3052, 'Krasniqi', 'Emanuel', 3, 2002, 4, 19000, to_date('09-05-1999', 
+'DD-MM-YYYY'), to_date('15-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3053, 'Otele', 'Philip', 3, 2002, 4, 8500, to_date('18-06-1998', 'DD-MMYYYY'), to_date('30-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3054, 'Birligea', 'Daniel', 3, 2002, 4, 16500, to_date('30-09-2000', 'DDMM-YYYY'), to_date('15-01-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3055, 'Deac', 'Ciprian', 3, 2002, 4, 20000, to_date('08-09-1986', 'DDMM-YYYY'), to_date('15-06-2016', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3056, 'Niczuly', 'Roland', 3, 2005, 5, 8000, to_date('05-09-1995', 'DDMM-YYYY'), to_date('18-07-2016', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3057, 'Moldovan', 'Dinu', 3, 2002, 4, 4000, to_date('08-12-1988', 'DDMM-YYYY'), to_date('17-07-2020', 'DD-MM-YYYY'));
+DELETE from componenti
+WHERE id_component=3057;
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3057, 'Moldovan', 'Dinu', 3, 2005, 5, 4000, to_date('08-12-1988', 'DDMM-YYYY'), to_date('17-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3058, 'Ninaj', 'Branislav', 3, 2005, 5, 7000, to_date('15-12-1992', 'DDMM-YYYY'), to_date('17-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3059, 'Ciobotariu', 'Denis', 3, 2005, 5, 10000, to_date('01-12-1996', 'DDMM-YYYY'), to_date('13-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3060, 'Stefan', 'Florin', 3, 2005, 5, 6000, to_date('25-02-1997', 'DD-MMYYYY'), to_date('30-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3061, 'Balasa', 'Mihai', 3, 2005, 5, 9500, to_date('14-01-1995', 'DD-MMYYYY'), to_date('20-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3062, 'Paun', 'Nicolae', 3, 2005, 5, 5500, to_date('22-07-1989', 'DDMM-YYYY'), to_date('16-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3063, 'Aganovic', 'Adnan', 3, 2005, 5, 6000, to_date('15-10-1987', 'DDMM-YYYY'), to_date('17-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3064, 'Matei', 'Cosmin', 3, 2005, 5, 9300, to_date('21-08-1994', 'DDMM-YYYY'), to_date('01-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3065, 'Carnat', 'Nicolae', 3, 2005, 5, 4000, to_date('05-01-1990', 'DDMM-YYYY'), to_date('14-06-2018', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3066, 'Damascan', 'Vitalie', 3, 2005, 5, 10000, to_date('19-04-1999', 
+'DD-MM-YYYY'), to_date('19-01-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3067, 'Debeljuh', 'Gabriel', 3, 2005, 5, 8500, to_date('15-03-1997', 'DDMM-YYYY'), to_date('17-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3068, 'Filip', 'Alexandru', 3, 2008, 6, 4500, to_date('14-08-2003', 'DDMM-YYYY'), to_date('24-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3069, 'Bozoanca', 'Gabriel', 3, 2008, 6, 5500, to_date('20-06-1993', 'DDMM-YYYY'), to_date('20-01-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3070, 'Papp', 'Paul', 3, 2008, 6, 7000, to_date('09-05-1990', 'DD-MMYYYY'), to_date('14-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3071, 'Radu', 'Denis', 3, 2008, 6, 3500, to_date('19-05-2002', 'DD-MMYYYY'), to_date('24-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3072, 'Ticu', 'Valentin', 3, 2008, 6, 6000, to_date('14-12-2000', 'DDMM-YYYY'), to_date('24-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3073, 'Seto', 'Takayuki', 3, 2008, 6, 7500, to_date('27-02-1989', 'DDMM-YYYY'), to_date('27-09-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3074, 'Roman', 'Eduard', 3, 2008, 6, 2500, to_date('20-03-2004', 'DDMM-YYYY'), to_date('01-12-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3075, 'Avram', 'Petre', 3, 2008, 6, 4000, to_date('08-12-1997', 'DD-MMYYYY'), to_date('24-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3076, 'Da Silva', 'Jair', 3, 2008, 6, 4500, to_date('13-10-1993', 'DD-MMYYYY'), to_date('31-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3077, 'Popescu', 'Valentin', 3, 2008, 6, 2500, to_date('13-09-2002', 'DDMM-YYYY'), to_date('24-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3078, 'Musi', 'Alexandru', 3, 2008, 6, 5500, to_date('12-06-1998', 'DDMM-YYYY'), to_date('13-01-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3079, 'Grozav', 'Gicu', 3, 2008, 6, 9000, to_date('21-05-1993', 'DD-MMYYYY'), to_date('30-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3080, 'Omrani', 'Billel', 3, 2008, 6, 7800, to_date('14-10-1995', 'DDMM-YYYY'), to_date('24-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3081, 'Cabuz', 'Catalin', 3, 2009, 7, 5500, to_date('12-08-1994', 'DDMM-YYYY'), to_date('17-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3082, 'Mutiu', 'Vlad', 3, 2009, 7, 3500, to_date('31-12-1998', 'DD-MMYYYY'), to_date('12-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3083, 'Gaman', 'Valerica', 3, 2009, 7, 4500, to_date('31-10-1992', 'DDMM-YYYY'), to_date('22-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3084, 'Ciubotariu', 'Kevin', 3, 2009, 7, 2500, to_date('01-10-2001', 'DDMM-YYYY'), to_date('12-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3085, 'Butean', 'Mihai', 3, 2009, 7, 5000, to_date('12-12-1997', 'DDMM-YYYY'), to_date('24-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3086, 'Alhassan', 'Baba', 3, 2009, 7, 4000, to_date('14-07-1998', 'DDMM-YYYY'), to_date('12-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3087, 'Sota', 'Mino', 3, 2009, 7, 5000, to_date('10-10-1995', 'DD-MMYYYY'), to_date('01-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3088, 'Iancu', 'Dragos', 3, 2009, 7, 6000, to_date('15-06-2000', 'DDMM-YYYY'), to_date('14-03-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3089, 'Negut', 'Sergiu', 3, 2009, 7, 4500, to_date('03-07-1990', 'DD-MMYYYY'), to_date('10-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3090, 'Iancu', 'Gabriel', 3, 2009, 7, 6000, to_date('12-07-1995', 'DDMM-YYYY'), to_date('12-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3091, 'Paraschiv', 'Daniel', 3, 2009, 7, 7000, to_date('10-02-1999', 'DDMM-YYYY'), to_date('23-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3092, 'Stoian', 'Relu', 3, 2010, 8, 2500, to_date('14-03-1998', 'DD-MMYYYY'), to_date('13-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3093, 'Ursu', 'Dan', 3, 2010, 8, 1500, to_date('15-01-2004', 'DD-MMYYYY'), to_date('15-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3094, 'Yabre', 'Francois', 3, 2010, 8, 3000, to_date('24-02-1994', 'DDMM-YYYY'), to_date('12-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3095, 'Lopez', 'Ariel', 3, 2010, 8, 4000, to_date('12-05-1988', 'DD-MMYYYY'), to_date('15-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3096, 'Ghiocel', 'Costin', 3, 2010, 8, 1500, to_date('14-01-2002', 'DDMM-YYYY'), to_date('13-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3097, 'Teles', 'Samuel', 3, 2010, 8, 4000, to_date('14-03-1998', 'DDMM-YYYY'), to_date('13-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3098, 'Neagu', 'Ionut', 3, 2010, 8, 3500, to_date('06-06-1994', 'DD-MMYYYY'), to_date('30-06-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3099, 'Cisotti', 'Juri', 3, 2010, 8, 3400, to_date('12-04-1995', 'DD-MMYYYY'), to_date('29-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3100, 'Bordun', 'Denis', 3, 2010, 8, 1500, to_date('23-08-1986', 'DDMM-YYYY'), to_date('13-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3101, 'Cirjan', 'George', 3, 2010, 8, 1900, to_date('20-07-1988', 'DDMM-YYYY'), to_date('13-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3102, 'Pop', 'Alexandru', 3, 2010, 8, 3000, to_date('06-09-1998', 'DDMM-YYYY'), to_date('04-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3103, 'Gurau', 'Ionut', 3, 2006, 9, 4000, to_date('12-05-1997', 'DD-MMYYYY'), to_date('15-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3104, 'Popa', 'Robert', 3, 2006, 9, 2500, to_date('24-04-2000', 'DD-MMYYYY'), to_date('15-09-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3105, 'Negru', 'Radu', 3, 2006, 9, 4000, to_date('19-08-1995', 'DD-MMYYYY'), to_date('09-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3106, 'Lacroix', 'Leo', 3, 2006, 9, 4600, to_date('22-10-1994', 'DD-MMYYYY'), to_date('15-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3107, 'Kvakic', 'Amar', 3, 2006, 9, 3000, to_date('24-05-1990', 'DDMM-YYYY'), to_date('30-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3108, 'Padula', 'Andrea', 3, 2006, 9, 5500, to_date('13-08-1997', 'DDMM-YYYY'), to_date('25-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3109, 'Achim', 'Vlad', 3, 2006, 9, 4000, to_date('12-05-1997', 'DD-MMYYYY'), to_date('15-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3110, 'Albu', 'Dragos', 3, 2006, 9, 5000, to_date('18-05-1995', 'DD-MMYYYY'), to_date('15-08-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3111, 'Bauza', 'Juan', 3, 2006, 9, 6000, to_date('04-04-1998', 'DD-MMYYYY'), to_date('01-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3112, 'Blanuta', 'Vladislav', 3, 2006, 9, 7000, to_date('13-02-1998', 'DDMM-YYYY'), to_date('31-05-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3113, 'Van Durmen', 'Jan', 3, 2006, 9, 6500, to_date('15-10-1993', 'DDMM-YYYY'), to_date('21-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3114, 'Compagnucci', 'Mario', 3, 2006, 9, 3500, to_date('24-09-2000', 
+'DD-MM-YYYY'), to_date('30-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3115, 'Popescu', 'Laurentiu', 3, 2007, 10, 7500, to_date('04-09-1998', 
+'DD-MM-YYYY'), to_date('30-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3116, 'Lazar', 'David', 3, 2007, 10, 6000, to_date('25-11-1988', 'DDMM-YYYY'), to_date('19-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3117, 'Silva', 'Raul', 3, 2007, 10, 20000, to_date('06-06-1996', 'DD-MMYYYY'), to_date('12-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3118, 'Badelj', 'Juraj', 3, 2007, 10, 9500, to_date('19-12-1997', 'DD-MMYYYY'), to_date('01-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3119, 'Vladoiu', 'Stefan', 3, 2007, 10, 11000, to_date('25-08-2000', 'DDMM-YYYY'), to_date('19-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3120, 'Benga', 'Denis', 3, 2007, 10, 5000, to_date('24-01-2001', 'DDMM-YYYY'), to_date('25-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3121, 'Kurtic', 'Jasmin', 3, 2007, 10, 25000, to_date('14-05-1992', 'DDMM-YYYY'), to_date('12-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3122, 'Mateiu', 'Alexandru', 3, 2007, 10, 20000, to_date('21-10-1989', 
+'DD-MM-YYYY'), to_date('18-07-2013', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3123, 'Baiaram', 'Stefan', 3, 2007, 10, 10000, to_date('10-10-2001', 'DDMM-YYYY'), to_date('05-01-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3124, 'Houri', 'Lyes', 3, 2007, 10, 12000, to_date('25-11-1996', 'DDMM-YYYY'), to_date('19-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3125, 'Mitrita', 'Alexandru', 3, 2007, 10, 30000, to_date('13-04-1995', 
+'DD-MM-YYYY'), to_date('25-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3126, 'Ivan', 'Andrei', 3, 2007, 10, 25000, to_date('23-07-1996', 'DDMM-YYYY'), to_date('13-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3127, 'Koljic', 'Elvir', 3, 2007, 10, 23500, to_date('26-05-1995', 'DDMM-YYYY'), to_date('28-06-2018', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3128, 'Ducan', 'Razvan', 3, 2012, 11, 2500, to_date('07-02-2001', 'DDMM-YYYY'), to_date('19-01-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3129, 'Seroni', 'Alin', 3, 2012, 11, 4500, to_date('17-06-1989', 'DD-MMYYYY'), to_date('12-08-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3130, 'Patache', 'Andrei', 3, 2012, 11, 4300, to_date('02-10-1987', 'DDMM-YYYY'), to_date('14-06-2015', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3131, 'Sadiku', 'Riyad', 3, 2012, 11, 1500, to_date('07-05-1998', 'DDMM-YYYY'), to_date('12-06-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3132, 'Cret', 'Razvan', 3, 2012, 11, 500, to_date('02-12-2004', 'DD-MMYYYY'), to_date('19-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3133, 'Dican', 'Victor', 3, 2012, 11, 2500, to_date('27-10-2000', 'DDMM-YYYY'), to_date('19-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3134, 'Fulop', 'Lorand', 3, 2012, 11, 3500, to_date('28-02-1993', 'DDMM-YYYY'), to_date('26-06-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3135, 'Florescu', 'Eduard', 3, 2012, 11, 2000, to_date('10-03-1994', 'DDMM-YYYY'), to_date('18-02-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3136, 'Mailat', 'Sebastian', 3, 2012, 11, 4000, to_date('07-09-1995', 'DDMM-YYYY'), to_date('15-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3137, 'Carausu', 'George', 3, 2012, 11, 600, to_date('13-06-2005', 'DDMM-YYYY'), to_date('18-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3138, 'Camara', 'Sekou', 3, 2012, 11, 2500, to_date('19-04-1998', 'DDMM-YYYY'), to_date('16-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3139, 'Popa', 'Razvan', 3, 2004, 12, 3500, to_date('17-07-2001', 'DDMM-YYYY'), to_date('25-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3140, 'Paz', 'Cristian', 3, 2004, 12, 4500, to_date('27-05-1998', 'DDMM-YYYY'), to_date('15-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3141, 'Armas', 'Igor', 3, 2004, 12, 5500, to_date('10-12-1992', 'DD-MMYYYY'), to_date('14-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3142, 'Boboc', 'Radu', 3, 2004, 12, 3400, to_date('06-10-1999', 'DDMM-YYYY'), to_date('16-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3143, 'Crepulja', 'Roman', 3, 2004, 12, 5500, to_date('17-09-1994', 'DDMM-YYYY'), to_date('31-05-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3144, 'Droppa', 'Lukas', 3, 2004, 12, 3900, to_date('26-07-1989', 'DDMM-YYYY'), to_date('14-01-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3145, 'Rata', 'Vadim', 3, 2004, 12, 6500, to_date('25-11-1997', 'DD-MMYYYY'), to_date('16-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3146, 'Voican', 'Razvan', 3, 2004, 12, 3500, to_date('07-06-1998', 'DDMM-YYYY'), to_date('25-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3147, 'Doru', 'Andrei', 3, 2004, 12, 1500, to_date('05-06-2002', 'DDMM-YYYY'), to_date('10-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3148, 'Munteanu', 'Alexandru', 3, 2004, 12, 2000, to_date('30-12-2001', 
+'DD-MM-YYYY'), to_date('25-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3149, 'Dumiter', 'Andrei', 3, 2004, 12, 4900, to_date('09-08-1997', 'DDMM-YYYY'), to_date('25-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3150, 'Lung Jr.', 'Silviu', 3, 2011, 13, 5500, to_date('04-06-1989', 'DDMM-YYYY'), to_date('19-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3151, 'Ilie', 'Florin', 3, 2011, 13, 3500, to_date('04-06-1991', 'DD-MMYYYY'), to_date('15-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3152, 'Ispas', 'Rares', 3, 2011, 13, 1500, to_date('04-05-2001', 'DD-MMYYYY'), to_date('19-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3153, 'Serban', 'Sorin', 3, 2011, 13, 3600, to_date('13-03-2000', 'DDMM-YYYY'), to_date('19-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3154, 'Belu', 'Claudiu', 3, 2011, 13, 1700, to_date('05-12-1993', 'DDMM-YYYY'), to_date('22-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3155, 'Vasvari', 'Gabriel', 3, 2011, 13, 4500, to_date('24-06-1990', 'DDMM-YYYY'), to_date('19-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3156, 'Bordeianu', 'Mihai', 3, 2011, 13, 6500, to_date('04-02-1993', 'DDMM-YYYY'), to_date('19-08-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3157, 'Roman', 'Alin', 3, 2011, 13, 3700, to_date('02-08-1985', 'DDMM-YYYY'), to_date('14-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3158, 'Phelipe', 'Luis', 3, 2011, 13, 5600, to_date('12-04-1999', 'DDMM-YYYY'), to_date('19-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3159, 'Harrison', 'Shayon', 3, 2011, 13, 3400, to_date('15-06-1988', 'DDMM-YYYY'), to_date('11-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3160, 'Dumitru', 'Antonio', 3, 2011, 13, 800, to_date('03-10-2004', 'DDMM-YYYY'), to_date('11-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3161, 'Iacob', 'Florin', 3, 2003, 14, 5000, to_date('01-06-1993', 'DDMM-YYYY'), to_date('14-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3162, 'Conte', 'Ibrahima', 3, 2003, 14, 3500, to_date('11-08-1998', 'DDMM-YYYY'), to_date('14-06-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3163, 'Benga', 'Alexandru', 3, 2003, 14, 5500, to_date('25-05-1989', 
+'DD-MM-YYYY'), to_date('13-08-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3164, 'Iurasiuc', 'Denis', 3, 2003, 14, 5300, to_date('04-12-1998', 'DDMM-YYYY'), to_date('15-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3165, 'Iacob', 'Liviu', 3, 2003, 14, 700, to_date('03-06-2004', 'DD-MMYYYY'), to_date('17-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3166, 'Abeid', 'Aly', 3, 2003, 14, 3300, to_date('09-11-2000', 'DD-MMYYYY'), to_date('14-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3167, 'Capusa', 'Tiberiu', 3, 2003, 14, 2900, to_date('02-07-1996', 'DDMM-YYYY'), to_date('13-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3168, 'Carp', 'Catalin', 3, 2003, 14, 6000, to_date('20-06-1993', 'DDMM-YYYY'), to_date('13-09-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3169, 'Pop', 'Rares', 3, 2003, 14, 5500, to_date('14-11-2001', 'DD-MMYYYY'), to_date('14-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3170, 'Dumitrascu', 'Denis', 3, 2003, 14, 3800, to_date('12-07-1995', 
+'DD-MM-YYYY'), to_date('15-08-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3171, 'Ofosu', 'Reagy', 3, 2003, 14, 3000, to_date('13-09-1997', 'DDMM-YYYY'), to_date('02-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3172, 'Lukassen', 'Kevin', 3, 2003, 14, 7100, to_date('21-06-1995', 'DDMM-YYYY'), to_date('18-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3173, 'Stahl', 'Albert', 3, 2003, 14, 5100, to_date('12-09-1999', 'DDMM-YYYY'), to_date('11-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3174, 'Plamen', 'Iliev', 3, 2015, 15, 6000, to_date('17-04-1992', 'DDMM-YYYY'), to_date('10-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3175, 'Gorcea', 'David', 3, 2015, 15, 1000, to_date('03-03-2004', 'DDMM-YYYY'), to_date('05-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3176, 'Vatajelu', 'Bogdan', 3, 2015, 15, 5500, to_date('20-05-1993', 'DDMM-YYYY'), to_date('10-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3177, 'Pitian', 'Andrei', 3, 2015, 15, 3600, to_date('17-01-1997', 'DDMM-YYYY'), to_date('14-06-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3178, 'Calugar', 'Razvan', 3, 2015, 15, 2500, to_date('12-04-2001', 'DDMM-YYYY'), to_date('10-06-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3179, 'Nistor', 'Dan', 3, 2015, 15, 7000, to_date('29-07-1989', 'DD-MMYYYY'), to_date('01-09-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3180, 'Simion', 'Gabriel', 3, 2015, 15, 6000, to_date('09-09-1998', 'DDMM-YYYY'), to_date('05-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3181, 'Bic', 'Ovidiu', 3, 2015, 15, 3000, to_date('01-04-1988', 'DD-MMYYYY'), to_date('10-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3182, 'Gheorghe', 'Valentin', 3, 2015, 15, 7000, to_date('19-02-1997', 
+'DD-MM-YYYY'), to_date('11-07-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3183, 'Calcan', 'Andreias', 3, 2015, 15, 3800, to_date('17-04-1994', 'DDMM-YYYY'), to_date('15-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3184, 'Stoica', 'Ianis', 3, 2015, 15, 4500, to_date('15-04-2002', 'DD-MMYYYY'), to_date('16-07-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3185, 'Popa', 'Daniel', 3, 2015, 15, 5000, to_date('18-09-1997', 'DDMM-YYYY'), to_date('17-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3186, 'Aioani', 'Marian', 3, 2013, 16, 8000, to_date('10-05-1999', 'DDMM-YYYY'), to_date('11-07-2020', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3187, 'Buzbuchi', 'Alexandru', 3, 2013, 16, 7000, to_date('10-05-1993', 
+'DD-MM-YYYY'), to_date('15-07-2014', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3188, 'Larie', 'Ionut', 3, 2013, 16, 9000, to_date('12-01-1987', 'DD-MMYYYY'), to_date('14-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3189, 'Kiki', 'David', 3, 2013, 16, 7600, to_date('12-04-1999', 'DD-MMYYYY'), to_date('16-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3190, 'Grosu', 'Darius', 3, 2013, 16, 900, to_date('21-05-2003', 'DDMM-YYYY'), to_date('11-08-2022', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3191, 'Boli', 'Kevin', 3, 2013, 16, 6000, to_date('22-04-1994', 'DD-MMYYYY'), to_date('21-07-2019', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3192, 'Baluta', 'Tudor', 3, 2013, 16, 11000, to_date('24-01-1998', 'DDMM-YYYY'), to_date('11-07-2017', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3193, 'Grameni', 'Constantin', 3, 2013, 16, 6500, to_date('11-12-1999', 
+'DD-MM-YYYY'), to_date('13-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3194, 'Budescu', 'Constantin', 3, 2013, 16, 15000, to_date('25-04-1989', 
+'DD-MM-YYYY'), to_date('11-08-2023', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3195, 'Mazilu', 'Adrian', 3, 2013, 16, 4000, to_date('13-05-2005', 'DDMM-YYYY'), to_date('11-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3196, 'De Souza', 'Rivaldinho', 3, 2013, 16, 12000, to_date('01-03-1995', 
+'DD-MM-YYYY'), to_date('12-07-2021', 'DD-MM-YYYY'));
+INSERT INTO componenti(id_component, nume, prenume, id_functie, 
+id_manager, id_echipa, salariu, data_nasterii, data_sosire_la_echipa)
+VALUES(3197, 'Sali', 'Enes', 3, 2013, 16, 5000, to_date('20-03-2006', 'DD-MMYYYY'), to_date('14-07-2021', 'DD-MM-YYYY'));
+
+CREATE SEQUENCE seq_impr
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 20
+NOCYCLE;
+
+--IMPRESARI--
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Grigore', 'Danut-Stefan', to_date('25-11-2003', 
+'DD-MM-YYYY'), '0924675770'); 
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Predescu', 'Iulian', to_date('24-10-1974', 'DDMM-YYYY'), '0945667222');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Olaru', 'Valentin', to_date('23-10-1985', 'DDMM-YYYY'), '0724675770'); --eroare pentru ca nu se verifica restrictia la nr. de 
+tel
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Olaru', 'Valentin', to_date('23-10-1985', 'DDMM-YYYY'), '0925855910');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Becali', 'Giovani', to_date('14-12-1955', 'DDMM-YYYY'), '0934770313');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Prodan', 'Anamaria', to_date('26-04-1973', 'DDMM-YYYY'), '0955061781');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Vasile', 'Ion', to_date('22-01-1986', 'DD-MMYYYY'), '0965889762');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Olaru', 'Sebastian', to_date('23-10-1985', 'DDMM-YYYY'), '0924615225');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Lesko', 'Paul', to_date('21-10-1980', 'DD-MMYYYY'), '0924145330');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Olaru', 'Valentin', to_date('23-10-1985', 'DDMM-YYYY'), '0724675770');
+ALTER TABLE Impresari
+
+numarul de telefon UNIQUE, astfel incat sa nu avem 2 nr de telefon la fel
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Ionescu', 'Cristian', to_date('22-06-1979', 'DDMM-YYYY'), '0925469210');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Frasinescu', 'Cosmin', to_date('12-04-1975', 
+'DD-MM-YYYY'), '0944569231');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Matei', 'Ovidiu', to_date('10-12-1984', 'DD-MMYYYY'), '0914478891');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Chirita', 'Marian', to_date('11-05-1964', 'DDMM-YYYY'), '0925014506');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Popescu', 'Victoria', to_date('12-03-1981', 'DDMM-YYYY'), '0924415911');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Sepsi', 'Laszlo', to_date('13-01-1976', 'DD-MMYYYY'), '0944855340');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Teodorescu', 'Vlad', to_date('14-02-1971', 'DDMM-YYYY'), '0925315944');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Pavlov', 'Ion', to_date('21-06-1966', 'DD-MMYYYY'), '0927891651');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Tudor', 'Igor', to_date('24-04-1970', 'DD-MMYYYY'), '0964515314');
+INSERT INTO Impresari(id_impresar, nume, prenume, data_nasterii, telefon)
+VALUES (seq_impr.NEXTVAL, 'Trica', 'Eugen', to_date('01-01-1975', 'DD-MMYYYY'), '0935865410');
+
+--INFO_JUCATORI--
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3000, 0, 0, 1, 32, 2500000, 6); 
+--eroare deoarece campul se numeste 'nr_assituri', nu 'nr assisturi'
+ALTER TABLE info_jucatori
+RENAME COLUMN nr_assituri to nr_assisturi;
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3000, 0, 0, 1, 32, 2500000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3001, 0, 0, 1, 99, 500000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3002, 0, 0, 4, 30, 1000000,null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3003, 4, 2, 4, 5, 800000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3004, 0, 1, 4, 21, 500000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3005, 2, 5, 2, 33, 2000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3006, 0, 1, 3, 28, 950000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3007, 4, 4, 5, 8, 3500000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie,
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3008, 10, 7, 7, 27, 5500000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3009, 2, 1, 6, 88, 670000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3010, 11, 9, 12, 7, 4500000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3011, 4, 2, 11, 10, 3200000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3012, 4, 4, 10, 25, 1000000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3013, 3, 2, 10, 9, 3500000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3014, 0, 0, 9, 20, 400000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3015, 0, 0, 1, 12, 3000000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3016, 0, 0, 1, 99, 50000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3017, 2, 0, 4, 6, 1500000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3018, 1, 1, 4, 22, 100000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3019, 0, 0, 4, 17, 200000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3020, 1, 2, 3, 3, 800000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3021, 6, 1, 8, 10, 700000, 9);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3022, 1, 3, 5, 23, 650000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3023, 1, 1, 6, 80, 700000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3024, 3, 2, 7, 70, 3500000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3025, 7, 5, 12, 11, 3750000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3026, 5, 2, 11, 18, 1900000, 9);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3027, 6, 3, 10, 9, 4000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3028, 1, 1, 8, 16, 300000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3029, 0, 0, 10, 88, 450000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3030, 0, 0, 1, 1, 250000, 9);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3031, 0, 0, 1, 12, 350000, 9);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3032, 1, 0, 4, 2, 150000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3033, 3, 1, 2, 24, 500000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3034, 0, 0, 4, 4, 350000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3035, 2, 2, 3, 5, 600000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3036, 0, 0, 2, 33, 550000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3037, 3, 1, 4, 6, 350000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3039, 1, 2, 7, 10, 500000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3041, 5, 0, 10, 9, 800000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3042, 4, 4, 11, 99, 1000000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3043, 0, 0, 1, 1, 1250000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3044, 0, 0, 1, 34, 250000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3045, 1, 1, 4, 2, 500000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3046, 0, 1, 4, 3, 650000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3047, 0, 3, 2, 45, 350000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3048, 2, 2, 3, 6, 2000000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3049, 4, 5, 7, 8, 1000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3050, 2, 0, 6, 40, 1750000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3051, 0, 1, 8, 23, 500000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3052, 7, 3, 12, 11, 3500000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3053, 5, 2, 10, 9, 1500000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3054, 8, 2, 10, 30, 4500000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3055, 2, 6, 11, 10, 550000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3056, 0, 0, 1, 33, 1200000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3057, 0, 0, 1, 1, 200000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3058, 2, 0, 4, 19, 1000000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3059, 1, 4, 2, 13, 700000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3060, 0, 5, 3, 3, 550000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3061, 0, 0, 4, 14, 350000, 14);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3062, 3, 4, 6, 15, 1000000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3063, 4, 2, 5, 28, 150000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3064, 7, 3, 7, 10, 1200000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3065, 6, 0, 10, 21, 500000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3066, 3, 3, 12, 8, 1500000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3067, 8, 4, 12, 99, 2000000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3068, 0, 0, 1, 1, 100000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3069, 0, 1, 1, 12, 900000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3070, 2, 2, 4, 6, 500000, 17);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3071, 0, 0, 2, 2, 250000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3072, 1, 5, 3, 13, 1500000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3073, 4, 2, 5, 13, 600000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3074, 2, 5, 6, 5, 1900000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3075, 1, 3, 8, 20, 500000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3076, 5, 5, 7, 8, 2000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3077, 2, 0, 12, 7, 450000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3078, 5, 4, 11, 13, 1500000, 9);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3079, 7, 1, 10, 77, 1950000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3080, 1, 1, 10, 98, 450000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3081, 0, 1, 1, 1, 1000000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3082, 0, 0, 1, 13, 200000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3083, 0, 0, 4, 2, 700000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3084, 2, 0, 2, 3, 400000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3085, 3, 4, 3, 19, 1400000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3086, 4, 3, 6, 8, 700000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3087, 2, 5, 6, 14, 850000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3088, 4, 1, 7, 7, 1000000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3089, 3, 2, 12, 18, 350000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3090, 6, 1, 12, 10, 900000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3091, 8, 0, 10, 9, 1200000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3092, 0, 0, 1, 1, 500000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie,
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3093, 0, 0, 1, 99, 50000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3094, 2, 0, 4, 2, 1200000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3095, 1, 5, 2, 3, 550000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3096, 0, 0, 3, 98, 120000, 13);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3097, 3, 4, 5, 16, 1000000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3098, 4, 3, 6, 26, 500000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3099, 5, 2, 7, 10, 1500000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3100, 3, 1, 12, 20, 550000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3101, 7, 1, 10, 77, 600000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3102, 9, 4, 10, 9, 2000000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3103, 0, 2, 1, 50, 1000000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3104, 0, 0, 1, 1, 400000, 12);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3105, 1, 4, 3, 13, 850000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3106, 2, 1, 4, 4, 600000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3107, 0, 0, 4, 2, 600000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3108, 2, 3, 4, 16, 950000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3110, 1, 1, 5, 8, 450000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3111, 8, 5, 7, 10, 1300000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3112, 7, 2, 10, 99, 1000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3113, 4, 5, 11, 27, 800000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3114, 5, 3, 12, 30, 650000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3115, 0, 0, 1, 1, 1000000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3116, 0, 0, 1, 12, 300000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3117, 3, 0, 4, 34, 1500000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3118, 1, 1, 4, 2, 650000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3119, 3, 2, 3, 3, 600000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3120, 3, 3, 2, 40, 750000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3121, 4, 2, 6, 20, 1850000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3122, 0, 4, 5, 13, 350000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3123, 6, 4, 12, 11, 1600000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3124, 0, 2, 4, 8, 450000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3125, 8, 6, 11, 28, 600000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3126, 7, 2, 10, 9, 1400000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3127, 4, 0, 10, 19, 900000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3128, 0, 0, 1, 12, 450000, 12);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3129, 1, 1, 4, 30, 350000, 12);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3130, 3, 0, 3, 19, 400000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3131, 0, 0, 4, 2, 500000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3132, 1, 2, 2, 3, 250000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3133, 2, 2, 5, 17, 650000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3134, 3, 1, 6, 80, 750000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3135, 8, 2, 7, 8, 1000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3136, 4, 3, 9, 15, 650000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3137, 1, 0, 8, 13, 450000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3138, 6, 3, 10, 9, 650000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3139, 0, 0, 1, 12, 1000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3140, 2, 4, 2, 13, 650000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3141, 0, 0, 4, 5, 600000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3142, 1, 5, 3, 4, 750000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3143, 4, 2, 5, 6 , 450000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3144, 5, 1, 7, 19, 850000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3145, 1, 2, 6, 22, 1000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3146, 4, 4, 8, 15, 650000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3147, 2, 3, 9, 17, 560000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3148, 6, 0, 10, 90, 450000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3149, 5, 3, 10, 23, 600000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3150, 0, 0, 1, 1, 450000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3151, 2, 1, 2, 2, 650000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3152, 0, 0, 4, 5, 350000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3153, 1, 5, 3, 23, 460000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3154, 4, 2, 8, 70, 650000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3155, 5, 2, 6, 10, 600000, 12);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3156, 2, 0, 5, 37, 600000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3157, 5, 1, 7, 11, 800000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3158, 7, 2, 12, 8, 1000000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3159, 4, 2, 10, 9, 500000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3160, 1, 2, 11, 15, 300000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3161, 0, 0, 1, 93, 650000, 12);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3162, 1, 3, 2, 2, 450000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3163, 1, 0, 3, 23, 350000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3164, 1, 2, 4, 5, 700000, 9);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3166, 3, 3, 6, 6, 1000000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3167, 0, 1, 5, 33, 550000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3168, 2, 0, 5, 4, 450000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3169, 7, 2, 7, 10, 1400000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3170, 4, 4, 8, 29, 750000, 11);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3171, 2, 4, 9, 18, 600000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3172, 6, 0, 10, 42, 650000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3173, 4, 1, 10, 25, 400000, 7);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3174, 0, 0, 1, 12, 700000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3175, 0, 0, 1, 85, 250000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3176, 3, 4, 2, 3, 850000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3177, 0, 0, 4, 17, 350000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3178, 2, 2, 3, 4, 550000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3179, 9, 6, 6, 10, 1000000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3180, 2, 1, 5, 25, 650000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3181, 3, 4, 7, 94, 800000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3182, 4, 1, 11, 22, 750000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3183, 0, 3, 7, 30, 400000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3184, 7, 3, 12, 9, 1000000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3185, 4, 0, 10, 18, 500000, 5);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3186, 0, 1, 1, 13, 900000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3187, 0, 0, 1, 31, 250000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3188, 5, 2, 4, 17, 770000, 2);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3189, 2, 4, 2, 25, 600000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3190, 0, 1, 3, 75, 450000, null);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3191, 2, 2, 5, 21, 800000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3192, 6, 3, 6, 20, 1200000, 6);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3193, 2, 0, 4, 18, 1000000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3194, 5, 5, 7, 10, 750000, 4);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3195, 3, 2, 11, 17, 1500000, 1);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3196, 4, 3, 10, 9, 1000000, 8);
+INSERT INTO info_jucatori(id_jucator, nr_goluri, nr_assisturi, id_pozitie, 
+nr_tricou, valoare_jucator, id_impresar)
+VALUES (3197, 3, 5, 12, 16, 2000000, 5);
+
+--TRANSFERURI--
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (1, 3114, null, 9, 450000, null);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (2, 3120, 7, 10, 550000, 2);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (3, 3121, null, 10, 0, 11);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (4, 3147, 2, 12, 350000, 7);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (5, 3156, 4, 13, 600000, null);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (6, 3194, 6, 16, 0, null);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (7, 3004, null, 1, 0, 6);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (8, 3025, 4, 2, 1000000, 4);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (9, 3153, 1, 13, 150000, null);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (10, 3053, 14, 4, 700000, 5);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (11, 3080, 1, 6, 500000, null);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (12, 3071, 16, 6, 400000, 11);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (13, 3049, null, 4, 1500000, 5);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (14, 3019, 1, 2, 0, 5);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (15, 3165, 3, 14, 120000, 1);
+INSERT INTO transferuri(id_transfer, id_jucator, id_echipa_veche, 
+id_echipa_noua, suma_transfer, id_impresar)
+VALUES (16, 3066, 10, 5, 900000, 7);
